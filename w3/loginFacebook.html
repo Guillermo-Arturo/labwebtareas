@@ -91,20 +91,21 @@
   the JavaScript SDK to present a graphical Login button that triggers
   the FB.login() function when clicked.
 -->
+<nav class="navbar navbar-inverse">
+  
+</nav>
 
-<div class="container">
-  <div class="row">
+<div class="jumbotron">
+  <div class="container">
     <div class="col-md-4"></div>
     <div class="col-md-4 center-block">
         <fb:login-button scope="public_profile,email" onlogin="checkLoginState();" style="padding-top: 50%;">
         </fb:login-button>
+        <br>
+        <div id="status"><h1></h1></div>
     </div>
     <div class="col-md-4"></div>
   </div>
 </div>
-
-<div id="status">
-</div>
-
 </body>
 </html>
