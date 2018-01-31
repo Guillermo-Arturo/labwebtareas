@@ -4,77 +4,126 @@
     <meta charset="utf-8" />
     <title>Simple Shopping Car</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
 
     
 </head>
 <body onload="initialize()">
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Simple Shopping Car</a>
+            </div>
+        </div> 
+    </nav>
     
-
-
-<h5>Simple Shopping Car</h5>
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 table-responsive">
    
-                                        <label>Productos</label>
+                    <label>Productos</label>
 
-                                        <select  id="id_productos"  onchange="getDataProductos()">
-                                              
-                                        </select>
-                                                
-                                            
-                                                <label for="Precio">Precio</label>
-                                    
-                                        <input placeholder="0.00" id="Precio" type="text">
-                                  
-                        
-                                        <label for="Precio">Cantidad</label>
-                        
-                                        <input type="text" size="1" id="Cantidad" value="1"
-                                            onkeydown="if (event.keyCode == 13) document.getElementById('addShoppingCar').click()"/>
-                        
-                                        
-                                  
-                                        <input type="button"  id="addShoppingCar" onclick="addCar()"  value=" + "/>      
-                                  
-                             
-       
-                            <table id="tableProducts" border="1" >
-		
-                                <thead>
-                                    <tr>
-                                        <th width="35" id="Cant">Cant</th>
-                                        <th width="35" id="Nombre">Nombre</th>
-                                        <th width="35" id="Prec">Prec</th>
-                                        <th width="35" id="Imp">Imp</th>
-                                        <th width="40" id="borrar">Borrar</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                       
-
-                           <table border="0">
-                                <tr>
-                                     
-                                     <td>Total Importe: $</td>
-                                     <td> <div id="totalImporte" /></td>
-                                     
-                                    <td>Tot Uni:</td>
-                                     <td> <div id="totalUnidades" /></td>
-                                     </tr>    
-                            </table>
+                    <select  id="id_productos"  onchange="getDataProductos()">
+                          
+                    </select>
                             
-
-
-                    </div>
+                        
+                            <label for="Precio">Precio</label>
+                
+                    <input placeholder="0.00" id="Precio" type="text">
+              
+    
+                    <label for="Precio">Cantidad</label>
+    
+                    <input type="text" size="1" id="Cantidad" value="1"
+                        onkeydown="if (event.keyCode == 13) document.getElementById('addShoppingCar').click()"/>
+    
                     
-                    
-                </div>
+              
+                    <input type="button"  id="addShoppingCar" onclick="addCar()"  value=" + "/>  
+         
+
+                    <table id="tableProducts" border="1" class="table">
+
+                        <thead>
+                            <tr>
+                                <th width="35" id="Cant">Cant</th>
+                                <th width="35" id="Nombre">Nombre</th>
+                                <th width="35" id="Prec">Precio</th>
+                                <th width="35" id="Imp">Importe</th>
+                                <th width="35" id="photo">Imagen</th>
+                                <th width="35" id="descuento">Descuento</th>
+                                <th width="40" id="borrar">Borrar</th>
+                            </tr>
+                        </thead>
+                    </table>
+            
+
+                <table border="0">
+                        <tr>
+                            
+                            <td>Total Importe: $</td>
+                            <td> <div id="totalImporte" /></td>
+                            
+                            <td>Tot Uni:</td>
+                            <td> <div id="totalUnidades" /></td>
+                            </tr>    
+                    </table>
+
+                    <div id="paypal-button"></div>  
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
 
+<script>
+    paypal.Button.render({
 
+        env: 'production', // Or 'sandbox'
 
+        client: {
+            sandbox:    'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R',
+            production: 'xxxxxxxxx'
+        },
+
+        commit: true, // Show a 'Pay Now' button
+
+        payment: function(data, actions) {
+            return actions.payment.create({
+                payment: {
+                    transactions: [
+                        {
+                            amount: { total: '1.00', currency: 'USD' }
+                        }
+                    ]
+                }
+            });
+        },
+
+        onAuthorize: function(data, actions) {
+            return actions.payment.execute().then(function(payment) {
+
+                // The payment is complete!
+                // You can now show a confirmation message to the customer
+            });
+        }
+
+    }, '#paypal-button');
+</script>
 
 <script>
 
@@ -109,16 +158,19 @@ var myProduct1 = new ShoppingCarProduct();
 myProduct1.id = "001";
 myProduct1.name = "Laptop Dell";
 myProduct1.price = "12000";
+myProduct1.url = "http://i.dell.com/sites/imagecontent/products/PublishingImages/xps-15-9560-laptop/laptop-xps-15-pdp-polaris-10.jpg";
 
 var myProduct2 = new ShoppingCarProduct();
 myProduct2.id = "002";
 myProduct2.name = "Xbox One S";
 myProduct2.price = "9500";
+myProduct2.url = "https://i5.walmartimages.com/asr/7b6814f1-9de0-41ea-a64d-70924a839db6_1.39c71ef3b99d80b17d7d400a5ed578f9.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF";
 
 var myProduct3 = new ShoppingCarProduct();
 myProduct3.id = "003";
 myProduct3.name = "RaspBerry Pi 3";
 myProduct3.price = "1250";
+myProduct3.url = "https://images-na.ssl-images-amazon.com/images/I/91zSu44%2B34L._SX355_.jpg";
 
 listProducts.push(myProduct1);
 listProducts.push(myProduct2);
@@ -128,17 +180,13 @@ listProducts.push(myProduct3);
 try
 { 
     tweets = JSON.stringify(listProducts);
-    alert(tweets);
-  
     
     tweets = JSON.parse(tweets);
-    alert(tweets);
     myDataProductos = tweets; 
         
             tweets.forEach(function (tweet) 
                 {
-                    alert(tweet.id + "- " + tweet.name);
-                    $('#id_productos').append($("<option></option>").attr("value", tweet.id).text(tweet.name));
+                    $('#id_productos').append($("<option></option>").attr({"value":tweet.id, "name":tweet.url}).text(tweet.name));
 
                 });
                 
@@ -197,6 +245,9 @@ function ShoppingCarItem()
    this.Precio = 0;
    this.Cantidad = 0;
 
+   this.Imagen = "";
+
+
    this.Importe = 0;
    this.PorcDesc1 = 0;
    this.PorcDesc2 = 0;
@@ -247,6 +298,7 @@ function addCar()
 
        item.Precio = parseFloat(document.getElementById("Precio").value);
        item.Cantidad = cantidad;
+       item.Imagen = $("#id_productos :selected").attr("name");
        var importe = 0;
  
        importe = item.Precio * item.Cantidad;
@@ -334,9 +386,10 @@ function showScar()
        var cellCantidad = rowCir.insertCell(0);
        var cellProducto = rowCir.insertCell(1);
        var cellPrecio = rowCir.insertCell(2);
-       
        var cellImporte = rowCir.insertCell(3);
-       var cellBorrar = rowCir.insertCell(4);
+       var cellImagen = rowCir.insertCell(4);
+       var cellDescuento = rowCir.insertCell(5);
+       var cellBorrar = rowCir.insertCell(6);
        var url = "<a href=\"javascript: void();\" onclick=\"deleteItem(" + tweet.ProductID + ")\">Borrar</a>";
 
        cellCantidad.innerHTML = tweet.Cantidad;
@@ -344,6 +397,7 @@ function showScar()
        cellPrecio.innerHTML = tweet.Precio;
        
        cellImporte.innerHTML = tweet.Importe;
+       cellImagen.innerHTML = "<img height='42' width='42' src='" + tweet.Imagen + "'>";
        cellBorrar.innerHTML = url;
 
        totalUni += parseFloat(tweet.Cantidad);
